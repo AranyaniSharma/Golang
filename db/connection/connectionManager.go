@@ -15,7 +15,7 @@ type DatabaseConnectionManager interface {
 }
 
 type DatabaseConnectionManagerImpl struct {
-	DatabaseConfig *DBConfig
+	DatabaseConfig     *DBConfig
 	DatabaseConnection DatabaseConnect
 }
 
@@ -42,7 +42,7 @@ func (dbc *DBConnect) GetSession() *dbr.Session {
 }
 
 func (manager *DatabaseConnectionManagerImpl) GetConnection() (DatabaseConnect, error) {
-	if manager.DatabaseConnection!= nil {
+	if manager.DatabaseConnection != nil {
 		return manager.DatabaseConnection, nil
 	}
 
@@ -65,7 +65,7 @@ func (manager *DatabaseConnectionManagerImpl) CloseConnection() error {
 	if err := manager.DatabaseConnection.GetConnection().Close(); err != nil {
 		log.Fatalf("Error while closing database Connection")
 	}
-
+	manager.DatabaseConnection = nil
 	return nil
 }
 

@@ -10,17 +10,21 @@ import (
 )
 
 func MigrationsUp(username, password, host, port, dbName, schema string) error {
+
 	assetFunc := func(name string) ([]byte, error) {
+
 		asset, err := Asset(name) // TODO: Generated code
 		if err != nil {
 			return nil, fmt.Errorf("error while creating driver: %v", err)
 		}
 		return asset, nil
 	}
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?search_path=%s;sslmode=%s",
+
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?search_path=%s&sslmode=%s",
 		username, password, host, port,
 		dbName, schema, "disable")
 	err := runMigrations(AssetNames(), assetFunc, "university-management", dsn)
+
 	if err != nil {
 		if err == migrate.ErrNoChange {
 			log.Println(migrate.ErrNoChange.Error())
@@ -33,6 +37,7 @@ func MigrationsUp(username, password, host, port, dbName, schema string) error {
 }
 
 func runMigrations(assets []string, asset func(name string) ([]byte, error), appName string, dsn string) error {
+
 	assetSource := bindata.Resource(assets, func(name string) ([]byte, error) {
 		asset, err := asset(name)
 		if err != nil {
@@ -47,8 +52,10 @@ func runMigrations(assets []string, asset func(name string) ([]byte, error), app
 	}
 
 	sourceName := fmt.Sprintf("%s-migrations", appName)
+	//sourceName1 := fmt.Sprintf("%s-migrations", "student-management")
 
 	migrateInstance, err := migrate.NewWithSourceInstance(sourceName, driver, dsn)
+	log.Printf("%v", migrateInstance)
 	if err != nil {
 		return errors.Errorf("error while creating Migrate instance: %v", err)
 	}

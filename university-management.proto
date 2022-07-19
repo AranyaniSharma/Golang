@@ -18,7 +18,50 @@ message GetDepartmentResponse {
   Department department = 1;
 }
 
+message Student {
+  int32 id = 1;
+  string name = 2;
+  string department = 3;
+
+}
+
+message GetStudentRequest {
+  string department = 1;
+}
+
+message GetStudentResponse {
+  repeated Student students = 1;
+}
+
+message Attendance{
+  int32  id = 1;
+  int32 studentId = 2;
+  string loginTime = 3;
+  string logoutTime = 4;
+}
+
+message  GetLoginRequest{
+  Attendance attendance = 1;
+}
+
+message GetLoginResponse{
+  string loginMessage = 1;
+}
+
+message  GetLogoutRequest{
+  Attendance attendance = 1;
+}
+
+message GetLogoutResponse{
+  string loginMessage = 1;
+}
+
 service UniversityManagementService {
-  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentResponse) {
-  }
+  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentResponse) {}
+  rpc GetStudent (GetStudentRequest) returns (GetStudentResponse) {}
+  rpc RecordStudentLoginTime(GetLoginRequest) returns(GetLoginResponse){}
+
+  rpc RecordStudentLogoutTime(GetLogoutRequest) returns(GetLogoutResponse){}
+
+
 }
