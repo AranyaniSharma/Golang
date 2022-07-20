@@ -56,12 +56,28 @@ message GetLogoutResponse{
   string loginMessage = 1;
 }
 
+message Staff {
+  int32 staffid = 1;
+  string name = 2;
+}
+
+message GetStaffRequest{
+  int32 rollNo =1;
+}
+
+message GetStaffResponse{
+  repeated Staff staff=1;
+}
+
+
+
 service UniversityManagementService {
   rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentResponse) {}
   rpc GetStudent (GetStudentRequest) returns (GetStudentResponse) {}
   rpc RecordStudentLoginTime(GetLoginRequest) returns(GetLoginResponse){}
-
   rpc RecordStudentLogoutTime(GetLogoutRequest) returns(GetLogoutResponse){}
+  rpc GetStaff(GetStaffRequest) returns(GetStaffResponse){}
+
 
 
 }

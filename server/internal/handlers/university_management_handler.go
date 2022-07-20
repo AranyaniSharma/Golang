@@ -168,6 +168,55 @@ func (u *universityManagementServer) RecordStudentLogoutTime(ctx context.Context
 	return &response, nil
 }
 
+func (u *universityManagementServer) GetStaff(ctx context.Context, request *um.GetStaffRequest) (*um.GetStaffResponse, error) {
+	connection, err := u.connectionManager.GetConnection()
+	if err != nil {
+		log.Fatalf("Error: %+v", err)
+	}
+	defer u.connectionManager.CloseConnection()
+
+	log.Printf("GetStaffed   Recieved message from client: %v", request.RollNo)
+
+	var department string
+	_, err = connection.GetSession().Select("department").From("students").Where("rollno=?", request.GetRollNo()).Load(&department)
+	if err != nil {
+		log.Fatalf("Error in getting session is: %+v", err)
+	}
+	log.Printf("departmemnt %v", department)
+	var departmentId int32
+	_, err = connection.GetSession().Select("id").From("department").Where("name=?", department).Load(&departmentId)
+	if err != nil {
+		log.Fatalf("Error in getting session is: %+v", err)
+	}
+	log.Printf("department id %v ", departmentId)
+	var staffId []int32
+	_, err = connection.GetSession().Select("staffid").From("staff_department").Where("departmentid=?", departmentId).Load(&staffId)
+	if err != nil {
+		log.Fatalf("Error in getting session is: %+v", err)
+	}
+	log.Printf("staff id  %v", staffId)
+
+	var staff []um.Staff
+
+	_, err = connection.GetSession().Select("staffid", "name").From("staff").Where("staffid IN ?", staffId).Load(&staff)
+	if err != nil {
+		log.Fatalf("Error in getting session is: %+v", err)
+	}
+	log.Printf("staff %v", staff[0].Staffid)
+
+	var staff_list *um.GetStaffResponse = &um.GetStaffResponse{}
+
+	for _, staff := range staff {
+		s := um.Staff{
+			Staffid: staff.Staffid,
+			Name:    staff.Name,
+		}
+		staff_list.Staff = append(staff_list.Staff, &s)
+	}
+	return staff_list, nil
+
+}
+
 func notifyWhenStudentLogsIn(request *um.GetLoginRequest, rollNo int32) {
 	if rollNo == 0 {
 		log.Printf("Student logged in without roll No")

@@ -34,7 +34,7 @@ func main() {
 	}
 	log.Println("response from server", studentResponse)
 
-	loginAttendace := university_management.Attendance{StudentId: 5}
+	loginAttendace := university_management.Attendance{StudentId: 3}
 
 	loginResponse, err := client.RecordStudentLoginTime(context.TODO(), &university_management.GetLoginRequest{Attendance: &loginAttendace})
 	if err != nil {
@@ -49,4 +49,11 @@ func main() {
 		log.Fatalf("Error occured while entering logout timings %+v err: ", logoutAttendance, err)
 	}
 	log.Println("response from server", logoutResponse)
+
+	staffResponse, err := client.GetStaff(context.TODO(), &university_management.GetStaffRequest{RollNo: 1001})
+	if err != nil {
+		log.Fatalf("Error occured while entering logout timings %+v err: ", staffResponse, err)
+	}
+	log.Println("response from server", staffResponse)
+
 }

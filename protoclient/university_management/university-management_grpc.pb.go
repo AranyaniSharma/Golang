@@ -22,6 +22,7 @@ type UniversityManagementServiceClient interface {
 	GetStudent(ctx context.Context, in *GetStudentRequest, opts ...grpc.CallOption) (*GetStudentResponse, error)
 	RecordStudentLoginTime(ctx context.Context, in *GetLoginRequest, opts ...grpc.CallOption) (*GetLoginResponse, error)
 	RecordStudentLogoutTime(ctx context.Context, in *GetLogoutRequest, opts ...grpc.CallOption) (*GetLogoutResponse, error)
+	GetStaff(ctx context.Context, in *GetStaffRequest, opts ...grpc.CallOption) (*GetStaffResponse, error)
 }
 
 type universityManagementServiceClient struct {
@@ -68,6 +69,15 @@ func (c *universityManagementServiceClient) RecordStudentLogoutTime(ctx context.
 	return out, nil
 }
 
+func (c *universityManagementServiceClient) GetStaff(ctx context.Context, in *GetStaffRequest, opts ...grpc.CallOption) (*GetStaffResponse, error) {
+	out := new(GetStaffResponse)
+	err := c.cc.Invoke(ctx, "/university_management.UniversityManagementService/GetStaff", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UniversityManagementServiceServer is the server API for UniversityManagementService service.
 // All implementations must embed UnimplementedUniversityManagementServiceServer
 // for forward compatibility
@@ -76,6 +86,7 @@ type UniversityManagementServiceServer interface {
 	GetStudent(context.Context, *GetStudentRequest) (*GetStudentResponse, error)
 	RecordStudentLoginTime(context.Context, *GetLoginRequest) (*GetLoginResponse, error)
 	RecordStudentLogoutTime(context.Context, *GetLogoutRequest) (*GetLogoutResponse, error)
+	GetStaff(context.Context, *GetStaffRequest) (*GetStaffResponse, error)
 	mustEmbedUnimplementedUniversityManagementServiceServer()
 }
 
@@ -94,6 +105,9 @@ func (UnimplementedUniversityManagementServiceServer) RecordStudentLoginTime(con
 }
 func (UnimplementedUniversityManagementServiceServer) RecordStudentLogoutTime(context.Context, *GetLogoutRequest) (*GetLogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RecordStudentLogoutTime not implemented")
+}
+func (UnimplementedUniversityManagementServiceServer) GetStaff(context.Context, *GetStaffRequest) (*GetStaffResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStaff not implemented")
 }
 func (UnimplementedUniversityManagementServiceServer) mustEmbedUnimplementedUniversityManagementServiceServer() {
 }
@@ -181,6 +195,24 @@ func _UniversityManagementService_RecordStudentLogoutTime_Handler(srv interface{
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UniversityManagementService_GetStaff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStaffRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UniversityManagementServiceServer).GetStaff(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/university_management.UniversityManagementService/GetStaff",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UniversityManagementServiceServer).GetStaff(ctx, req.(*GetStaffRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UniversityManagementService_ServiceDesc is the grpc.ServiceDesc for UniversityManagementService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -203,6 +235,10 @@ var UniversityManagementService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RecordStudentLogoutTime",
 			Handler:    _UniversityManagementService_RecordStudentLogoutTime_Handler,
+		},
+		{
+			MethodName: "GetStaff",
+			Handler:    _UniversityManagementService_GetStaff_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -41,7 +41,8 @@ func main() {
 	//insertDepartmentSeedData(connectionmanager)
 	//insertStudentSeedData(connectionmanager)
 	//insertAttendanceSeedData(connectionmanager)
-
+	//insertStaffSeedData(connectionmanager)
+	//insertStaffDepartmentSeedData(connectionmanager)
 	grpcServer := grpc.NewServer()
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -136,6 +137,63 @@ func insertAttendanceSeedData(connectionManager connection.DatabaseConnectionMan
 
 	if err != nil {
 		log.Fatalf("Could not insert into attendance table. Err: %+v", err)
+	}
+
+	defer connectionManager.CloseConnection()
+}
+
+func insertStaffSeedData(connectionManager connection.DatabaseConnectionManager) {
+	connection, err := connectionManager.GetConnection()
+	if err != nil {
+		log.Fatalf("Error: %+v", err)
+	}
+
+	log.Println("Cleaning up staff table")
+	_, err = connection.GetSession().DeleteFrom("staff").Exec()
+	if err != nil {
+		log.Fatalf("Could not delete from staff table. Err: %+v", err)
+	}
+
+	log.Println("Inserting into staff table")
+	_, err = connection.GetSession().InsertInto("staff").Columns("staffid", "name").
+		Values("2001", "Ak").
+		Values("2002", "Abhish").
+		Values("2003", "Stala").
+		Values("2004", "Anderson").
+		Values("2005", "Sara").Exec()
+
+	if err != nil {
+		log.Fatalf("Could not insert into students table. Err: %+v", err)
+	}
+
+	defer connectionManager.CloseConnection()
+}
+func insertStaffDepartmentSeedData(connectionManager connection.DatabaseConnectionManager) {
+	connection, err := connectionManager.GetConnection()
+	if err != nil {
+		log.Fatalf("Error: %+v", err)
+	}
+
+	log.Println("Cleaning up staff_department table")
+	_, err = connection.GetSession().DeleteFrom("staff_department").Exec()
+	if err != nil {
+		log.Fatalf("Could not delete from staff_department table. Err: %+v", err)
+	}
+
+	log.Println("Inserting into staff_department table")
+	_, err = connection.GetSession().InsertInto("staff_department").Columns("staffid", "departmentid").
+		Values("2001", "1").
+		Values("2002", "2").
+		Values("2003", "3").
+		Values("2001", "3").
+		Values("2002", "1").
+		Values("2003", "2").
+		Values("2001", "4").
+		Values("2005", "4").
+		Exec()
+
+	if err != nil {
+		log.Fatalf("Could not insert into staff_department table. Err: %+v", err)
 	}
 
 	defer connectionManager.CloseConnection()
