@@ -38,9 +38,10 @@ func main() {
 		nil,
 	}
 
-	insertDepartmentSeedData(connectionmanager)
-	insertStudentSeedData(connectionmanager)
-	insertAttendanceSeedData(connectionmanager)
+	//insertDepartmentSeedData(connectionmanager)
+	//insertStudentSeedData(connectionmanager)
+	//insertAttendanceSeedData(connectionmanager)
+
 	grpcServer := grpc.NewServer()
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -65,19 +66,19 @@ func insertDepartmentSeedData(connectionManager connection.DatabaseConnectionMan
 	}
 
 	log.Println("Cleaning up departments table")
-	_, err = connection.GetSession().DeleteFrom("departments").Exec()
+	_, err = connection.GetSession().DeleteFrom("department").Exec()
 	if err != nil {
 		log.Fatalf("Could not delete from department table. Err: %+v", err)
 	}
 
 	log.Println("Inserting into departments table")
-	_, err = connection.GetSession().InsertInto("departments").Columns("id", "name").
+	_, err = connection.GetSession().InsertInto("department").Columns("id", "name").
 		Values("1", "Computer Science").Exec()
-	_, err = connection.GetSession().InsertInto("departments").Columns("id", "name").
+	_, err = connection.GetSession().InsertInto("department").Columns("id", "name").
 		Values("2", "Electronics").Exec()
-	_, err = connection.GetSession().InsertInto("departments").Columns("id", "name").
+	_, err = connection.GetSession().InsertInto("department").Columns("id", "name").
 		Values("3", "Information technology").Exec()
-	_, err = connection.GetSession().InsertInto("departments").Columns("id", "name").
+	_, err = connection.GetSession().InsertInto("department").Columns("id", "name").
 		Values("4", "Automobile").Exec()
 
 	if err != nil {
@@ -100,14 +101,14 @@ func insertStudentSeedData(connectionManager connection.DatabaseConnectionManage
 	}
 
 	log.Println("Inserting into students table")
-	_, err = connection.GetSession().InsertInto("students").Columns("id", "name", "department").
-		Values("1", "Alex", "Computer Science").
-		Values("2", "Jimmy", "Electronics").
-		Values("3", "Stuart", "Information technology").
-		Values("4", "Andrew", "Information technology").
-		Values("5", "Sara", "Computer Science").
-		Values("6", "Robert", "Electronics").
-		Values("7", "Will", "Electronics").Exec()
+	_, err = connection.GetSession().InsertInto("students").Columns("id", "rollno", "name", "department").
+		Values("1", "1001", "Alex", "Computer Science").
+		Values("2", "1002", "Jimmy", "Electronics").
+		Values("3", "1003", "Stuart", "Information technology").
+		Values("4", "1004", "Andrew", "Information technology").
+		Values("5", "1005", "Sara", "Computer Science").
+		Values("6", "1006", "Robert", "Electronics").
+		Values("7", "1007", "Will", "Electronics").Exec()
 
 	if err != nil {
 		log.Fatalf("Could not insert into students table. Err: %+v", err)

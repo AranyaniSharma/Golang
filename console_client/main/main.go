@@ -34,7 +34,7 @@ func main() {
 	}
 	log.Println("response from server", studentResponse)
 
-	loginAttendace := university_management.Attendance{StudentId: 2}
+	loginAttendace := university_management.Attendance{StudentId: 5}
 
 	loginResponse, err := client.RecordStudentLoginTime(context.TODO(), &university_management.GetLoginRequest{Attendance: &loginAttendace})
 	if err != nil {
@@ -42,7 +42,7 @@ func main() {
 	}
 	log.Println("response from server", loginResponse)
 
-	logoutAttendance := university_management.Attendance{StudentId: 7}
+	logoutAttendance := university_management.Attendance{StudentId: 2}
 
 	logoutResponse, err := client.RecordStudentLogoutTime(context.TODO(), &university_management.GetLogoutRequest{Attendance: &logoutAttendance})
 	if err != nil {
