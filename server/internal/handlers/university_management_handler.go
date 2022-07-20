@@ -50,9 +50,17 @@ func (u *universityManagementServer) GetStudent(ctx context.Context, request *um
 	log.Printf("Recieved message from client: %v", request.Department)
 
 	var students []um.Student
-	_, err = connection.GetSession().Select("id", "name", "department").From("students").Where("department=?", request.GetDepartment()).Load(&students)
-	if err != nil {
-		log.Fatalf("Error in getting session is: %+v", err)
+
+	if request.GetDepartment() == "" {
+		_, err = connection.GetSession().Select("id", "name", "department").From("students").Load(&students)
+		if err != nil {
+			log.Fatalf("Error in getting session is: %+v", err)
+		}
+	} else {
+		_, err = connection.GetSession().Select("id", "name", "department").From("students").Where("department=?", request.GetDepartment()).Load(&students)
+		if err != nil {
+			log.Fatalf("Error in getting session is: %+v", err)
+		}
 	}
 
 	var student_list *um.GetStudentResponse = &um.GetStudentResponse{}

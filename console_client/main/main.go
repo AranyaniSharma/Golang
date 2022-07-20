@@ -27,7 +27,7 @@ func main() {
 
 	log.Println("response from server", departmentResponse)
 
-	var department = "Electronics"
+	var department = ""
 	studentResponse, err := client.GetStudent(context.TODO(), &university_management.GetStudentRequest{Department: department})
 	if err != nil {
 		log.Fatalf("Error occured while fetching student %+v err: ", department, err)
